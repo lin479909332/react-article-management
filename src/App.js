@@ -3,6 +3,7 @@ import { Button } from 'antd'
 import './App.css'
 import Layout from './pages/Layout'
 import Login from '@/pages/Login'
+import { AuthComponent } from './components/AuthComponent'
 
 function App() {
   return (
@@ -10,7 +11,14 @@ function App() {
       <div className="App">
         <Button type="primary">Button</Button>
         <Routes>
-          <Route path="/" element={<Layout />} />
+          <Route
+            path="/"
+            element={
+              <AuthComponent>
+                <Layout />
+              </AuthComponent>
+            }
+          />
           <Route path="/login" element={<Login />} />
         </Routes>
       </div>
