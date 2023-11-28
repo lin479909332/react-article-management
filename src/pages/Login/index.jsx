@@ -1,9 +1,14 @@
 import { Card, Form, Input, Checkbox, Button } from 'antd'
+import { useStore } from '@/store'
 import logo from '@/assets/logo.png'
 import './index.scss'
 const Login = () => {
+  const { loginStore } = useStore()
   const onFinish = (values) => {
-    console.log('Success:', values)
+    loginStore.getToken({
+      mobile: values.mobile,
+      code: values.password,
+    })
   }
   return (
     <div className="login">
