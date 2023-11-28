@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getToken } from '@/utils'
 
 const http = axios.create({
   baseURL: 'http://geek.itheima.net/v1_0',
