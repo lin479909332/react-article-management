@@ -6,7 +6,7 @@ const AuthComponent = ({ children }) => {
   if (isToken) {
     return (
       <>
-        <children />
+        {children}
       </>
     )
   } else {
