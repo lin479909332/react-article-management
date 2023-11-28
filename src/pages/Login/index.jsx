@@ -12,7 +12,7 @@ const Login = () => {
       code: values.password,
     })
     try {
-      navigate('/')
+      navigate('/', { replace: true })
       message.success('登录成功')
     } catch (e) {
       message.error(e.response?.data?.message || '登录失败')
