@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from '@/utils'
+import { getToken, history, removeToken } from '@/utils'
 
 const http = axios.create({
   baseURL: 'http://geek.itheima.net/v1_0',
@@ -27,6 +27,11 @@ http.interceptors.response.use(
     return response.data
   },
   (error) => {
+    // token错误或者过期
+    if (error.response.status === 401) {
+      removeToken()
+      history.push('/login')
+    }
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
     return Promise.reject(error)
