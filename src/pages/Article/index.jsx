@@ -1,13 +1,43 @@
 import { Link } from 'react-router-dom'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Table, Tag, Space } from 'antd'
+import {
+  Card,
+  Breadcrumb,
+  Form,
+  Button,
+  Radio,
+  DatePicker,
+  Select,
+  Table,
+  Tag,
+  Space,
+  message,
+} from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 import img404 from '@/assets/error.png'
+import { http } from '@/utils'
+import { useEffect } from 'react'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  // 频道列表
+  const [channelList, setChannelList] = useState([])
+  // 获取频道列表
+  const getChannelList = async () => {
+    const res = await http.get('/channels')
+    if (res) {
+      setChannelList(res.data.channels)
+    } else {
+      message.error('获取频道列表失败')
+    }
+  }
+  useEffect(() => {
+    getChannelList()
+  }, [])
+
   const onFinish = (values) => {
     console.log(values)
   }
@@ -100,9 +130,12 @@ const Article = () => {
           </Form.Item>
 
           <Form.Item label="频道" name="channel_id">
-            <Select placeholder="请选择文章频道" defaultValue="lucy" style={{ width: 120 }}>
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
+            <Select placeholder="请选择文章频道" style={{ width: 200 }}>
+              {channelList.map((channel) => (
+                <Option key={channel.id} value={channel.id}>
+                  {channel.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 
