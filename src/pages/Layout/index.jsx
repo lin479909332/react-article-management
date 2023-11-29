@@ -1,21 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Layout, Menu, Popconfirm } from 'antd'
 import { HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Outlet, Link } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 import './index.scss'
+import { useStore } from '@/store'
 const { Header, Sider } = Layout
 
 const GeekLayout = () => {
+  const { userStore } = useStore()
   const [selectedKey, setSelectedKey] = useState('1')
+  // 动态设置高亮菜单
   const menuClick = (e) => {
     setSelectedKey(e.key)
   }
+  // 获取用户信息
+  useEffect(() => {
+    userStore.getUserInfo()
+  }, [userStore])
   return (
     <Layout>
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">user.name</span>
+          <span className="user-name">{userStore.userInfo.name}</span>
           <span className="user-logout">
             <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
               <LogoutOutlined /> 退出
@@ -52,4 +60,4 @@ const GeekLayout = () => {
   )
 }
 
-export default GeekLayout
+export default observer(GeekLayout)
