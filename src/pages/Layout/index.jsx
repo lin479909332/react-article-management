@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Layout, Menu, Popconfirm } from 'antd'
 import { HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Outlet, Link } from 'react-router-dom'
@@ -5,6 +6,10 @@ import './index.scss'
 const { Header, Sider } = Layout
 
 const GeekLayout = () => {
+  const [selectedKey, setSelectedKey] = useState('1')
+  const menuClick = (e) => {
+    setSelectedKey(e.key)
+  }
   return (
     <Layout>
       <Header className="header">
@@ -23,8 +28,9 @@ const GeekLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={[selectedKey]}
             style={{ height: '100%', borderRight: 0 }}
+            onClick={menuClick}
           >
             <Menu.Item icon={<HomeOutlined />} key="1">
               <Link to="/">数据概览</Link>
