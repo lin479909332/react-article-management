@@ -3,6 +3,8 @@
     "craco",
     "echart",
     "Popconfirm",
-    "Sider"
+    "pubdate",
+    "Sider",
+    "wkwebview"
   ]
 }
