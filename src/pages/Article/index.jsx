@@ -25,18 +25,44 @@ const { RangePicker } = DatePicker
 const Article = () => {
   // 频道列表
   const [channelList, setChannelList] = useState([])
+
   // 获取频道列表
-  const getChannelList = async () => {
-    const res = await http.get('/channels')
-    if (res) {
-      setChannelList(res.data.channels)
-    } else {
-      message.error('获取频道列表失败')
-    }
-  }
   useEffect(() => {
+    const getChannelList = async () => {
+      const res = await http.get('/channels')
+      if (res) {
+        setChannelList(res.data.channels)
+      } else {
+        message.error('获取频道列表失败')
+      }
+    }
     getChannelList()
   }, [])
+
+  // 文章列表数据管理
+  const [article, setArticleList] = useState({
+    list: [],
+    count: 0,
+  })
+
+  // 参数管理
+  const [params, setParams] = useState({
+    page: 1,
+    per_page: 10,
+  })
+
+  // 获取文章列表
+  useEffect(() => {
+    const getArticleList = async () => {
+      const res = await http.get('/mp/articles', { params })
+      if (res) {
+        console.log(res)
+      } else {
+        message.error('获取文章列表失败')
+      }
+    }
+    getArticleList()
+  }, [params])
 
   const onFinish = (values) => {
     console.log(values)
