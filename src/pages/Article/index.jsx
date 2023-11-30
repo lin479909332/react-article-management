@@ -56,7 +56,11 @@ const Article = () => {
     const getArticleList = async () => {
       const res = await http.get('/mp/articles', { params })
       if (res) {
-        console.log(res)
+        const { results, total_count } = res.data
+        setArticleList({
+          list: results,
+          count: total_count,
+        })
       } else {
         message.error('获取文章列表失败')
       }
@@ -74,7 +78,7 @@ const Article = () => {
       dataIndex: 'cover',
       width: 120,
       render: (cover) => {
-        return <img src={cover || img404} width={80} height={60} alt="" />
+        return <img src={cover.images[0] || img404} width={80} height={60} alt="" />
       },
     },
     {
@@ -113,21 +117,6 @@ const Article = () => {
           </Space>
         )
       },
-    },
-  ]
-  // 表格数据
-  const data = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: ['http://geek.itheima.net/resources/images/15.jpg'],
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案',
     },
   ]
   return (
@@ -179,7 +168,7 @@ const Article = () => {
       </Card>
       {/* 表格区域 */}
       <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+        <Table rowKey="id" columns={columns} dataSource={article.list} />
       </Card>
     </div>
   )
