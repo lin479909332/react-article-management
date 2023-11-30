@@ -17,7 +17,7 @@ import locale from 'antd/es/date-picker/locale/zh_CN'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import img404 from '@/assets/error.png'
-import { http } from '@/utils'
+import { http,history } from '@/utils'
 import { useEffect } from 'react'
 
 const { Option } = Select
@@ -145,7 +145,12 @@ const Article = () => {
       render: (data) => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => history.push(`/home/publish?id=${data.id}`)}
+            />
             <Popconfirm
               title="确认删除该条文章吗?"
               onConfirm={() => delArticle(data)}
