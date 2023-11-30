@@ -68,6 +68,7 @@ const Article = () => {
     getArticleList()
   }, [params])
 
+  // 确定筛选
   const onFinish = (values) => {
     const { channel_id, date, status } = values
     const _params = {}
@@ -84,6 +85,15 @@ const Article = () => {
       ..._params,
     })
   }
+
+  // 分页器页码点击
+  const pageChange = (page) => {
+    setParams({
+      ...params,
+      page,
+    })
+  }
+
   // 表格列
   const columns = [
     {
@@ -181,7 +191,17 @@ const Article = () => {
       </Card>
       {/* 表格区域 */}
       <Card title={`根据筛选条件共查询到 ${article.count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={article.list} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={article.list}
+          pagination={{
+            position: ['bottomCenter'],
+            current: params.page,
+            pageSize: params.per_page,
+            onChange: pageChange,
+          }}
+        />
       </Card>
     </div>
   )
