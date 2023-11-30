@@ -8,17 +8,18 @@ import { useStore } from '@/store'
 const { Header, Sider } = Layout
 
 const GeekLayout = () => {
-  const { userStore, loginStore } = useStore()
+  const { userStore, loginStore, channelStore } = useStore()
   const [selectedKey, setSelectedKey] = useState('1')
   const navigate = useNavigate()
   // 动态设置高亮菜单
   const menuClick = (e) => {
     setSelectedKey(e.key)
   }
-  // 获取用户信息
+  // 获取用户信息和频道数据
   useEffect(() => {
     userStore.getUserInfo()
-  }, [userStore])
+    channelStore.getChannelList()
+  }, [userStore, channelStore])
   // 退出登录
   const logOut = () => {
     loginStore.logOut()
