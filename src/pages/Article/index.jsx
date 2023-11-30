@@ -11,6 +11,7 @@ import {
   Tag,
   Space,
   message,
+  Popconfirm,
 } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
@@ -94,6 +95,15 @@ const Article = () => {
     })
   }
 
+  // 删除按钮
+  const delArticle = async (data) => {
+    await http.delete(`/mp/articles/${data.id}`)
+    setParams({
+      page: 1,
+      per_page: 10,
+    })
+  }
+
   // 表格列
   const columns = [
     {
@@ -136,7 +146,14 @@ const Article = () => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} />
+            <Popconfirm
+              title="确认删除该条文章吗?"
+              onConfirm={() => delArticle(data)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} />
+            </Popconfirm>
           </Space>
         )
       },
