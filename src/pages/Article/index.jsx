@@ -69,7 +69,20 @@ const Article = () => {
   }, [params])
 
   const onFinish = (values) => {
-    console.log(values)
+    const { channel_id, date, status } = values
+    const _params = {}
+    _params.status = status
+    if (values.channel_id) {
+      _params.channel_id = channel_id
+    }
+    if (date) {
+      _params.begin_pubdate = date[0].format('YYYY-MM-DD')
+      _params.end_pubdate = date[1].format('YYYY-MM-DD')
+    }
+    setParams({
+      ...params,
+      ..._params,
+    })
   }
   // 表格列
   const columns = [
@@ -167,7 +180,7 @@ const Article = () => {
         </Form>
       </Card>
       {/* 表格区域 */}
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
+      <Card title={`根据筛选条件共查询到 ${article.count} 条结果：`}>
         <Table rowKey="id" columns={columns} dataSource={article.list} />
       </Card>
     </div>
