@@ -1,6 +1,7 @@
 import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
@@ -10,6 +11,10 @@ const { Option } = Select
 
 const Publish = () => {
   const { channelStore } = useStore()
+  const [fileList, setFileList] = useState()
+  const onUploadChange = (fileList) => {
+    console.log(fileList)
+  }
   return (
     <div className="publish">
       <Card
@@ -52,7 +57,16 @@ const Publish = () => {
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            <Upload name="image" listType="picture-card" className="avatar-uploader" showUploadList>
+            {/* 上传组件 */}
+            <Upload
+              name="image"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList
+              action="http://geek.itheima.net/v1_0/upload"
+              fileList={fileList}
+              onChange={onUploadChange}
+            >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
               </div>
