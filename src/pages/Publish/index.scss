@@ -2,6 +2,12 @@
   position: relative;
 }
 
+.publish-quill {
+  .ql-editor {
+    min-height: 300px;
+  }
+}
+
 .ant-upload-list {
   .ant-upload-list-picture-card-container,
   .ant-upload-select {

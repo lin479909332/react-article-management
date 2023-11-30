@@ -1,16 +1,8 @@
-import {
-  Card,
-  Breadcrumb,
-  Form,
-  Button,
-  Radio,
-  Input,
-  Upload,
-  Space,
-  Select
-} from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import './index.scss'
 
 const { Option } = Select
@@ -28,11 +20,7 @@ const Publish = () => {
           </Breadcrumb>
         }
       >
-        <Form
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 16 }}
-          initialValues={{ type: 1 }}
-        >
+        <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }} initialValues={{ content: '' }}>
           <Form.Item
             label="标题"
             name="title"
@@ -58,12 +46,7 @@ const Publish = () => {
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            <Upload
-              name="image"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList
-            >
+            <Upload name="image" listType="picture-card" className="avatar-uploader" showUploadList>
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
               </div>
@@ -73,7 +56,9 @@ const Publish = () => {
             label="内容"
             name="content"
             rules={[{ required: true, message: '请输入文章内容' }]}
-          ></Form.Item>
+          >
+            <ReactQuill className="publish-quill" theme="snow" placeholder="请输入文章内容" />
+          </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
