@@ -22,7 +22,15 @@ const Publish = () => {
     const getArticle = async () => {
       const res = await http.get(`/mp/articles/${id}`)
       if (res.message === 'OK') {
-        formRef.current.setFieldsValue(res.data)
+        const { data } = res
+        formRef.current.setFieldsValue({ ...data, type: data.cover.type })
+        setFileList(
+          data.cover.images.map((url) => {
+            return {
+              url,
+            }
+          }),
+        )
       } else {
         message.error('获取文章失败')
       }
@@ -115,7 +123,7 @@ const Publish = () => {
           >
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
               {channelStore.channelList.map((item) => (
-                <Option key={item.id} value={item.name}>
+                <Option key={item.id} value={item.id}>
                   {item.name}
                 </Option>
               ))}
