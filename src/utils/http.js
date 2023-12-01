@@ -28,7 +28,7 @@ http.interceptors.response.use(
   },
   (error) => {
     // token错误或者过期
-    if (error.response.status === 401) {
+    if (error?.response.status === 401) {
       removeToken()
       history.push('/login')
     }
