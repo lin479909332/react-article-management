@@ -1,4 +1,4 @@
-import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select } from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
@@ -6,6 +6,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
 import { useStore } from '@/store'
+import { http } from '@/utils'
 
 const { Option } = Select
 
@@ -13,14 +14,43 @@ const Publish = () => {
   const { channelStore } = useStore()
   const [fileList, setFileList] = useState()
   // 上传图片
-  const onUploadChange = (fileList) => {
+  const onUploadChange = (info) => {
+    const fileList = info.fileList.map((file) => {
+      if (file.response) {
+        return {
+          url: file.response.data.url,
+        }
+      }
+      return file
+    })
     console.log(fileList)
+    setFileList(fileList)
   }
 
   const [imgCount, setImgCount] = useState(1)
   // radio状态切换
   const radioChange = (e) => {
     setImgCount(e.target.value)
+  }
+  // 上传文章
+  const onFinish = async (values) => {
+    const { channel_id, content, title, type } = values
+    const params = {
+      channel_id,
+      content,
+      title,
+      type,
+      cover: {
+        type,
+        images: fileList.map((item) => item.url),
+      },
+    }
+    const res = await http.post('/mp/articles?draft=false', params)
+    if (res.message === 'OK') {
+      message.success('发布成功')
+    } else {
+      message.error('发布失败')
+    }
   }
   return (
     <div className="publish">
@@ -34,7 +64,12 @@ const Publish = () => {
           </Breadcrumb>
         }
       >
-        <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }} initialValues={{ content: '' }}>
+        <Form
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{ content: '' }}
+          onFinish={onFinish}
+        >
           <Form.Item
             label="标题"
             name="title"
