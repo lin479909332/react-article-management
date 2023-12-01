@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Layout, Menu, Popconfirm } from 'antd'
 import { HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons'
-import { Outlet, Link, useNavigate } from 'react-router-dom'
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import './index.scss'
 import { useStore } from '@/store'
@@ -9,12 +9,9 @@ const { Header, Sider } = Layout
 
 const GeekLayout = () => {
   const { userStore, loginStore, channelStore } = useStore()
-  const [selectedKey, setSelectedKey] = useState('1')
   const navigate = useNavigate()
-  // 动态设置高亮菜单
-  const menuClick = (e) => {
-    setSelectedKey(e.key)
-  }
+  const location = useLocation()
+  const selectedKey = location.pathname
   // 获取用户信息和频道数据
   useEffect(() => {
     userStore.getUserInfo()
@@ -45,15 +42,14 @@ const GeekLayout = () => {
             theme="dark"
             defaultSelectedKeys={[selectedKey]}
             style={{ height: '100%', borderRight: 0 }}
-            onClick={menuClick}
           >
-            <Menu.Item icon={<HomeOutlined />} key="1">
+            <Menu.Item icon={<HomeOutlined />} key="/">
               <Link to="/">数据概览</Link>
             </Menu.Item>
-            <Menu.Item icon={<DiffOutlined />} key="2">
+            <Menu.Item icon={<DiffOutlined />} key="/article">
               <Link to="/article">内容管理</Link>
             </Menu.Item>
-            <Menu.Item icon={<EditOutlined />} key="3">
+            <Menu.Item icon={<EditOutlined />} key="/publish">
               <Link to="/publish">发布文章</Link>
             </Menu.Item>
           </Menu>
