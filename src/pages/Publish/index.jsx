@@ -1,7 +1,7 @@
 import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
@@ -13,6 +13,8 @@ const { Option } = Select
 const Publish = () => {
   const { channelStore } = useStore()
   const [fileList, setFileList] = useState()
+  // 声明暂存图片仓库
+  const fileListRef = useRef()
   // 上传图片
   const onUploadChange = (info) => {
     const fileList = info.fileList.map((file) => {
@@ -23,8 +25,9 @@ const Publish = () => {
       }
       return file
     })
-    console.log(fileList)
     setFileList(fileList)
+    // 将图片url暂存至仓库
+    fileListRef.current = fileList
   }
 
   const [imgCount, setImgCount] = useState(1)
@@ -32,6 +35,15 @@ const Publish = () => {
   const radioChange = (e) => {
     setImgCount(e.target.value)
   }
+  // 监听imgCount变化来改变图片墙
+  useEffect(() => {
+    if (imgCount === 1) {
+      const firstImg = fileListRef.current ? fileListRef.current[0] : null
+      setFileList(firstImg ? [firstImg] : [])
+    } else if (imgCount === 3) {
+      setFileList(fileListRef.current)
+    }
+  }, [imgCount])
   // 上传文章
   const onFinish = async (values) => {
     const { channel_id, content, title, type } = values
@@ -93,7 +105,7 @@ const Publish = () => {
 
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group onChange={radioChange}>
+              <Radio.Group onChange={radioChange} defaultValue={1}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
