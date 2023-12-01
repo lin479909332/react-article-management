@@ -135,7 +135,7 @@ const Article = () => {
               type="primary"
               shape="circle"
               icon={<EditOutlined />}
-              onClick={() => history.push(`/home/publish?id=${data.id}`)}
+              onClick={() => history.push(`/publish?id=${data.id}`)}
             />
             <Popconfirm
               title="确认删除该条文章吗?"
