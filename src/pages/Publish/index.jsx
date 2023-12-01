@@ -13,8 +13,24 @@ const { Option } = Select
 const Publish = () => {
   const { channelStore } = useStore()
   const [fileList, setFileList] = useState()
+  // 获取路径里的id
   const [params] = useSearchParams()
   const id = params.get('id')
+  // 数据回填
+  const formRef = useRef()
+  useEffect(() => {
+    const getArticle = async () => {
+      const res = await http.get(`/mp/articles/${id}`)
+      if (res.message === 'OK') {
+        formRef.current.setFieldsValue(res.data)
+      } else {
+        message.error('获取文章失败')
+      }
+    }
+    if (id) {
+      getArticle()
+    }
+  }, [id])
   // 声明暂存图片仓库
   const fileListRef = useRef()
   // 上传图片
@@ -83,6 +99,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }}
           initialValues={{ content: '' }}
           onFinish={onFinish}
+          ref={formRef}
         >
           <Form.Item
             label="标题"
