@@ -74,6 +74,8 @@ const Publish = () => {
                 action="http://geek.itheima.net/v1_0/upload"
                 fileList={fileList}
                 onChange={onUploadChange}
+                multiple={imgCount > 1}
+                maxCount={imgCount}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />
