@@ -1,6 +1,6 @@
 import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -24,13 +24,11 @@ const Publish = () => {
       if (res.message === 'OK') {
         const { data } = res
         formRef.current.setFieldsValue({ ...data, type: data.cover.type })
-        setFileList(
-          data.cover.images.map((url) => {
-            return {
-              url,
-            }
-          }),
-        )
+        const imageList = data.cover.images.map((url) => ({ url }))
+        // 回填upload组件（照片墙）里的图片数据
+        setFileList(imageList)
+        // 暂存列表也保存一份
+        fileListRef.current = imageList
       } else {
         message.error('获取文章失败')
       }
@@ -59,18 +57,21 @@ const Publish = () => {
   const [imgCount, setImgCount] = useState(1)
   // radio状态切换
   const radioChange = (e) => {
-    setImgCount(e.target.value)
-  }
-  // 监听imgCount变化来改变图片墙
-  useEffect(() => {
-    if (imgCount === 1) {
+    const count = e.target.value
+    setImgCount(count)
+    if (count === 0) {
+      return false
+    }
+    if (count === 1) {
       const firstImg = fileListRef.current ? fileListRef.current[0] : null
       setFileList(firstImg ? [firstImg] : [])
-    } else if (imgCount === 3) {
+    } else if (count === 3) {
       setFileList(fileListRef.current)
     }
-  }, [imgCount])
+  }
+
   // 上传文章
+  const navigate = useNavigate()
   const onFinish = async (values) => {
     const { channel_id, content, title, type } = values
     const params = {
@@ -83,11 +84,22 @@ const Publish = () => {
         images: fileList.map((item) => item.url),
       },
     }
-    const res = await http.post('/mp/articles?draft=false', params)
-    if (res.message === 'OK') {
-      message.success('发布成功')
+    if (id) {
+      const res = await http.put(`/mp/articles/${id}?draft=false`, params)
+      if (res.message === 'OK') {
+        navigate('/article')
+        message.success('更新成功')
+      } else {
+        message.error('更新失败')
+      }
     } else {
-      message.error('发布失败')
+      const res = await http.post('/mp/articles?draft=false', params)
+      if (res.message === 'OK') {
+        navigate('/article')
+        message.success('发布成功')
+      } else {
+        message.error('发布失败')
+      }
     }
   }
   return (
@@ -132,7 +144,7 @@ const Publish = () => {
 
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group onChange={radioChange} defaultValue={1}>
+              <Radio.Group onChange={radioChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
