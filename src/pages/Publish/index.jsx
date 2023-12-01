@@ -1,6 +1,6 @@
 import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -13,6 +13,8 @@ const { Option } = Select
 const Publish = () => {
   const { channelStore } = useStore()
   const [fileList, setFileList] = useState()
+  const [params] = useSearchParams()
+  const id = params.get('id')
   // 声明暂存图片仓库
   const fileListRef = useRef()
   // 上传图片
@@ -72,7 +74,7 @@ const Publish = () => {
             <Breadcrumb.Item>
               <Link to="/home">首页</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>发布文章</Breadcrumb.Item>
+            <Breadcrumb.Item>{id ? '编辑' : '发布'}文章</Breadcrumb.Item>
           </Breadcrumb>
         }
       >
@@ -141,7 +143,7 @@ const Publish = () => {
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
               <Button size="large" type="primary" htmlType="submit">
-                发布文章
+                {id ? '更新' : '发布'}文章
               </Button>
             </Space>
           </Form.Item>
