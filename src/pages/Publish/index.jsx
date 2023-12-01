@@ -12,8 +12,15 @@ const { Option } = Select
 const Publish = () => {
   const { channelStore } = useStore()
   const [fileList, setFileList] = useState()
+  // 上传图片
   const onUploadChange = (fileList) => {
     console.log(fileList)
+  }
+
+  const [imgCount, setImgCount] = useState(1)
+  // radio状态切换
+  const radioChange = (e) => {
+    setImgCount(e.target.value)
   }
   return (
     <div className="publish">
@@ -51,26 +58,28 @@ const Publish = () => {
 
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+              <Radio.Group onChange={radioChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            {/* 上传组件 */}
-            <Upload
-              name="image"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList
-              action="http://geek.itheima.net/v1_0/upload"
-              fileList={fileList}
-              onChange={onUploadChange}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>
+            {imgCount > 0 && (
+              // 上传组件
+              <Upload
+                name="image"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList
+                action="http://geek.itheima.net/v1_0/upload"
+                fileList={fileList}
+                onChange={onUploadChange}
+              >
+                <div style={{ marginTop: 8 }}>
+                  <PlusOutlined />
+                </div>
+              </Upload>
+            )}
           </Form.Item>
           <Form.Item
             label="内容"
